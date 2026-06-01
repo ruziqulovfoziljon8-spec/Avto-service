@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export const Navbar = () => {
+export default function Navbar() {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -94,11 +94,24 @@ export const Navbar = () => {
             >
               <h2>Bog'lanish</h2>
               <p>Telefon: +998 90 123 45 67</p>
-              <button onClick={() => setIsModalOpen(false)}>Yopish</button>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                style={{
+                  marginTop: "15px",
+                  padding: "8px 16px",
+                  backgroundColor: "#000",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Yopish
+              </button>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
     </>
   );
-};
+}
