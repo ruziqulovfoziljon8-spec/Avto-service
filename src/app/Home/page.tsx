@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import service from "../images/avto servise.jpg";
 
-export default function Home2() {
-  console.log("Home2 component rendered");
+export default function Home() {
+  console.log("Home component rendered");
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
 
