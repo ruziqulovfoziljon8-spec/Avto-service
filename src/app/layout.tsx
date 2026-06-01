@@ -1,7 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import "./globals.css";
-import { Navbar2 } from "./Navbar/page";
+import { Navbar } from "./Navbar/page";
 
 export default function RootLayout({
   children,
@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="uz">
       <body>
-        {isAutoPage && <Navbar2 />}
+        {isAutoPage && <Navbar />}
 
 
         <main>{children}</main>

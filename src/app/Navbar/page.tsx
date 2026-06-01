@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export const Navbar2 = () => {
+export const Navbar = () => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
