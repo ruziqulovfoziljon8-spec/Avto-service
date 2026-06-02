@@ -84,28 +84,38 @@ export default function AutoService() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [dates, setDates] = useState<any[]>([]);
   const [scrolled, setScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     const handleScroll = () => setScrolled(window.scrollY > 20);
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleScroll);
+
     const saved = JSON.parse(localStorage.getItem("bookings") || "[]");
     setBookings(saved);
 
-    const days = [];
-    for (let i = 0; i < 7; i++) {
+    const days = Array.from({ length: 7 }, (_, i) => {
       const d = new Date();
       d.setDate(d.getDate() + i);
-      days.push({
+      return {
         full: d.toISOString().split("T")[0],
         day: d.getDate(),
         weekday: d
           .toLocaleDateString("uz-UZ", { weekday: "short" })
           .toUpperCase(),
-      });
-    }
+      };
+    });
     setDates(days);
     setSelectedDate(days[0].full);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const isTimeBooked = (time: string) =>
@@ -127,11 +137,9 @@ export default function AutoService() {
   };
 
   const handleMenuClick = (item: string) => {
-    if (item === "Xizmatlar") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      setSelectedMenu(item);
-    }
+    setIsMobileMenuOpen(false);
+    if (item === "Xizmatlar") window.scrollTo({ top: 0, behavior: "smooth" });
+    else setSelectedMenu(item);
   };
 
   return (
@@ -153,7 +161,11 @@ export default function AutoService() {
           left: 0,
           right: 0,
           zIndex: 1000,
-          padding: scrolled ? "15px 40px" : "25px 40px",
+          padding: isMobile
+            ? "15px 20px"
+            : scrolled
+            ? "15px 40px"
+            : "25px 40px",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -165,57 +177,104 @@ export default function AutoService() {
       >
         <div
           onClick={() => router.push("/")}
-          style={{
-            fontSize: "24px",
-            fontWeight: 900,
-            cursor: "pointer",
-            letterSpacing: "-1px",
-          }}
+          style={{ fontSize: "24px", fontWeight: 900, cursor: "pointer" }}
         >
           LUXE <span style={{ color: "#3498db" }}>AUTO</span>
         </div>
-        <div
-          style={{
-            display: "flex",
-            gap: "30px",
-            fontSize: "14px",
-            fontWeight: 600,
-            color: "#999",
-          }}
-        >
-          {["Xizmatlar", "Biz haqimizda", "Aloqa"].map((item) => (
-            <motion.span
-              key={item}
-              onClick={() => handleMenuClick(item)}
-              whileHover={{ color: "#3498db", y: -2 }}
-              style={{ cursor: "pointer" }}
+
+        {!isMobile ? (
+          <>
+            <div
+              style={{
+                display: "flex",
+                gap: "30px",
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "#999",
+              }}
             >
-              {item}
-            </motion.span>
-          ))}
-        </div>
-        <button
-          onClick={() => router.push("/Bandlovlar")}
-          style={{
-            padding: "10px 20px",
-            borderRadius: "12px",
-            backgroundColor: "#3498db",
-            color: "#fff",
-            border: "none",
-            fontWeight: 700,
-            fontSize: "13px",
-            cursor: "pointer",
-          }}
-        >
-          BRONLARIM
-        </button>
+              {["Xizmatlar", "Biz haqimizda", "Aloqa"].map((item) => (
+                <motion.span
+                  key={item}
+                  onClick={() => handleMenuClick(item)}
+                  whileHover={{ color: "#3498db", y: -2 }}
+                  style={{ cursor: "pointer" }}
+                >
+                  {item}
+                </motion.span>
+              ))}
+            </div>
+            <button
+              onClick={() => router.push("/Bandlovlar")}
+              style={{
+                padding: "10px 20px",
+                borderRadius: "12px",
+                backgroundColor: "#3498db",
+                color: "#fff",
+                border: "none",
+                fontWeight: 700,
+                fontSize: "13px",
+                cursor: "pointer",
+              }}
+            >
+              BRONLARIM
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#fff",
+              fontSize: "28px",
+            }}
+          >
+            {isMobileMenuOpen ? "✕" : "☰"}
+          </button>
+        )}
       </motion.nav>
 
+      {isMobile && isMobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            position: "fixed",
+            top: "70px",
+            left: 0,
+            right: 0,
+            background: "#111",
+            padding: "20px",
+            zIndex: 999,
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            alignItems: "center",
+          }}
+        >
+          {["Xizmatlar", "Biz haqimizda", "Aloqa", "Bronlarim"].map((item) => (
+            <span
+              key={item}
+              onClick={() =>
+                item === "Bronlarim"
+                  ? router.push("/Bandlovlar")
+                  : handleMenuClick(item)
+              }
+              style={{ fontSize: "18px", fontWeight: 600 }}
+            >
+              {item}
+            </span>
+          ))}
+        </motion.div>
+      )}
+
+      {/* MAIN CONTENT */}
       <div
         style={{
           position: "relative",
           zIndex: 1,
-          padding: "140px 20px 60px",
+          padding: isMobile ? "100px 20px 40px" : "140px 20px 60px",
           maxWidth: "1200px",
           margin: "0 auto",
         }}
@@ -238,11 +297,13 @@ export default function AutoService() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gridTemplateColumns: isMobile
+              ? "1fr"
+              : "repeat(auto-fit, minmax(320px, 1fr))",
             gap: "30px",
           }}
         >
-          {autoServices.map((s, index) => (
+          {autoServices.map((s) => (
             <motion.div
               key={s.id}
               whileHover={{ y: -10 }}
@@ -364,7 +425,6 @@ export default function AutoService() {
                   >
                     {selectedService.price.toLocaleString()} UZS
                   </p>
-
                   <div
                     style={{
                       display: "flex",
@@ -408,7 +468,6 @@ export default function AutoService() {
                       </div>
                     ))}
                   </div>
-
                   <div
                     style={{
                       display: "grid",
@@ -436,7 +495,6 @@ export default function AutoService() {
                       </button>
                     ))}
                   </div>
-
                   <button
                     onClick={handleFinalBook}
                     disabled={!selectedTime}
@@ -473,7 +531,6 @@ export default function AutoService() {
                   </p>
                 </div>
               )}
-
               <button
                 onClick={() => {
                   setSelectedService(null);

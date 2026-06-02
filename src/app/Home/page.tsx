@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import service from "../images/avto servise.jpg";
 
 export default function Home() {
-  console.log("Home component rendered");
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -13,9 +12,11 @@ export default function Home() {
       style={{
         position: "relative",
         width: "100%",
-        height: "100vh",
+        minHeight: "100vh", 
         backgroundColor: "#000",
         overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <div
@@ -34,7 +35,7 @@ export default function Home() {
           style={{
             width: "100%",
             height: "100%",
-            objectFit: "fill",
+            objectFit: "cover", 
             display: "block",
           }}
         />
@@ -45,7 +46,7 @@ export default function Home() {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.2)",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", 
           }}
         />
       </div>
@@ -54,19 +55,20 @@ export default function Home() {
         style={{
           position: "relative",
           zIndex: 10,
-          height: "100vh",
+          flex: 1,
           display: "flex",
           flexDirection: "column",
+          padding: "20px", 
         }}
       >
-        <header style={{ padding: "30px 40px" }}>
+        <header style={{ padding: "20px 0" }}>
           <div
             style={{
               display: "inline-block",
               backgroundColor: "rgba(0, 0, 0, 0.5)",
               backdropFilter: "blur(10px)",
-              padding: "10px 25px",
-              borderRadius: "15px",
+              padding: "10px 20px",
+              borderRadius: "12px",
               border: "1px solid rgba(52, 152, 219, 0.3)",
             }}
           >
@@ -74,7 +76,7 @@ export default function Home() {
               style={{
                 margin: 0,
                 color: "#fff",
-                fontSize: "22px",
+                fontSize: "18px",
                 fontWeight: 900,
               }}
             >
@@ -91,17 +93,17 @@ export default function Home() {
             alignItems: "center",
             justifyContent: "center",
             textAlign: "center",
-            padding: "0 20px",
+            marginTop: "20px",
           }}
         >
           <h1
             style={{
-              fontSize: "clamp(30px, 8vw, 70px)",
+              fontSize: "clamp(28px, 6vw, 60px)", 
               fontWeight: 900,
               color: "#fff",
               lineHeight: 1.1,
-              textShadow: "0 5px 20px rgba(0,0,0,0.8)",
-              margin: "0 0 15px 0",
+              textShadow: "0 5px 15px rgba(0,0,0,0.5)",
+              margin: "0 0 20px 0",
             }}
           >
             DRIVE WITH <br />
@@ -111,10 +113,10 @@ export default function Home() {
           <p
             style={{
               color: "#fff",
-              fontSize: "18px",
-              maxWidth: "550px",
-              marginBottom: "35px",
-              textShadow: "0 2px 10px rgba(0,0,0,1)",
+              fontSize: "clamp(14px, 2vw, 18px)",
+              maxWidth: "500px",
+              marginBottom: "40px",
+              padding: "0 10px",
               fontWeight: 500,
             }}
           >
@@ -126,7 +128,7 @@ export default function Home() {
             onMouseLeave={() => setIsHovered(false)}
             onClick={() => router.push("/AutoService")}
             style={{
-              padding: "18px 45px",
+              padding: "15px 40px",
               fontSize: "16px",
               fontWeight: "900",
               backgroundColor: isHovered ? "#2980b9" : "#3498db",
@@ -135,7 +137,6 @@ export default function Home() {
               borderRadius: "12px",
               cursor: "pointer",
               transition: "0.3s",
-              boxShadow: "0 10px 25px rgba(52, 152, 219, 0.4)",
               transform: isHovered ? "scale(1.05)" : "scale(1)",
             }}
           >
